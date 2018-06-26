@@ -41,6 +41,27 @@ app.get('/todos/:id',(req,res)=>{
 
 });
 
+app.delete('/todos/:id',(req,res)=>{
+  var id=req.params.id;
+  console.log(id);
+  if (!ObjectID.isValid(id)) {
+    res.status(404).send();
+    console.log('invalid');
+  }
+
+  Todo.findByIdAndRemove(id).then((todo)=>{
+    if(!todo){
+      res.status(404).send();
+      console.log('couldnt find inside remove');
+    }
+    res.send(todo);
+  }).catch((e)=>{
+    res.status(400).send();
+    console.log('log total error');
+  });
+
+});
+
 app.get('/todos',(req,res)=>{
   Todo.find().then((todos)=>{
     res.send({todos});
